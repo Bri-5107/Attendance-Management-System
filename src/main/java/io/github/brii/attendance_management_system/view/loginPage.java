@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 
 
-public class loginPage extends JFrame{
+public class loginPage extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -42,7 +42,7 @@ public class loginPage extends JFrame{
 	}
 
 	
-	public loginPage() {
+	public loginPage () {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -94,56 +94,63 @@ public class loginPage extends JFrame{
 		contentPane.add(passwordField, gbc_passwordField);
 		
 		loginButton = new JButton("Log In");
-		loginButton.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent e) {
-				String url = "jdbc:mysql://localhost:3306/attendanceDB";
-				String username = "root";
-				String password ="rlBD_115";
-				
-				try {
-					Class.forName("com.mysql.cj.jdbc.Driver"); //create the JDBC driver to be able to connect to MySQL
-					Connection con = DriverManager.getConnection(url, username, password); //connect to DB using the specified parameters
-					
-					String userName = textField.getText(); //retrieve text from JtextField component
-					String passWord = (new String( passwordField.getPassword())); //retrieve text from JpasswordField component
-					
-					
-					String sql = "SELECT password FROM admin WHERE username = ?";
-				    PreparedStatement pstmt = con.prepareStatement(sql);
-				    pstmt.setString(1, userName);
-
-				    ResultSet rs = pstmt.executeQuery();
-
-				    if (rs.next()) {
-				        String storedPassword = rs.getString("password");
-
-				       
-				        if (passWord.equals(storedPassword)) { 
-				            JOptionPane.showMessageDialog(loginPage.this, "Login successful!");
-				          
-				        } else {
-				            JOptionPane.showMessageDialog(loginPage.this, "Incorrect password.", "Login Error", JOptionPane.ERROR_MESSAGE);
-				        }
-				    } else {
-				        JOptionPane.showMessageDialog(loginPage.this, "Username not found.", "Login Error", JOptionPane.ERROR_MESSAGE);
-				    }
-
-				    rs.close();
-				    pstmt.close();
-				    con.close();
-
-				} catch (Exception ex) {
-					 System.out.println("Database Error");
-				}
-				
-			}
-		});
+		loginButton.addActionListener(this);
+	
+		
 		GridBagConstraints gbc_loginButton = new GridBagConstraints();
 		gbc_loginButton.fill = GridBagConstraints.VERTICAL;
 		gbc_loginButton.gridx = 2;
 		gbc_loginButton.gridy = 4;
 		contentPane.add(loginButton, gbc_loginButton);
 	}
+	
+	public void actionPerformed (ActionEvent e) {
+		String url = "jdbc:mysql://localhost:3306/attendanceDB";
+		String username = "root";
+		String password ="rlBD_115";
 		
+		try {
+			//Establish DB Connection
+			Class.forName("com.mysql.cj.jdbc.Driver"); 
+			Connection con = DriverManager.getConnection(url, username, password); 
+			
+			//Retrieve JComponent Details
+			String userName = textField.getText(); //retrieve text from JtextField component
+			@SuppressWarnings("deprecation")
+			String passWord = String.valueOf(passwordField.getText());
+			
+			//Create and Execute SQL Query
+			String sql = "SELECT password, username FROM admin";
+		    PreparedStatement pstmt = con.prepareStatement(sql);
+		    
+		    //Fetch SQL Query Result
+		    ResultSet rs = pstmt.executeQuery();
+		    
+		    while(rs.next()) {
+		        String storedPassword = rs.getString(1);
+		        String storedUsername = rs.getString(2);
+		        
+		        
+		        if(userName.equals(storedUsername) && passWord.equals(storedPassword)) {
+		        	new JOptionPane();
+		        	JOptionPane.showMessageDialog(this, "Log-in Successfully");
+		        } else {
+		        	new JOptionPane();
+		        	JOptionPane.showMessageDialog(this, "Incorrect username or password.", "Login Error", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
+		    
+		    rs.close();
+		    pstmt.close();
+		    con.close();
+		}
+		   
+	     catch (Exception ex) {
+	        ex.printStackTrace();
+	        new JOptionPane();
+	        JOptionPane.showMessageDialog(this, "Database Error", "Error Message", JOptionPane.ERROR_MESSAGE);
+	    }
+		
+	}
 }
 
