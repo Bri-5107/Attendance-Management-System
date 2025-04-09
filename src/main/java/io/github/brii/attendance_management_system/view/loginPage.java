@@ -132,8 +132,7 @@ public class loginPage extends JFrame implements ActionListener {
 		        
 		        
 		        if(userName.equals(storedUsername) && passWord.equals(storedPassword)) {
-		        	new JOptionPane();
-		        	JOptionPane.showMessageDialog(this, "Log-in Successfully");
+		        	new viewMembersPage();
 		        } else {
 		        	new JOptionPane();
 		        	JOptionPane.showMessageDialog(this, "Incorrect username or password.", "Login Error", JOptionPane.ERROR_MESSAGE);
