@@ -3,6 +3,7 @@ package io.github.brii.attendance_management_system.view;
 import java.awt.EventQueue;
 import java.sql.*;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -13,7 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class viewMembersPage extends JFrame {
+public class viewMembersPage extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -59,17 +60,26 @@ public class viewMembersPage extends JFrame {
 		contentPane.add(scrollPane);
 		table.setFillsViewportHeight(true);
 		
-		JButton btnNewButton = new JButton("Add");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton addBtn = new JButton("Add");
+		addBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
+				addMemberPage memberPage = new addMemberPage();
+				memberPage.setVisible(true);
 			}
 		});
-		btnNewButton.setBounds(492, 391, 91, 29);
-		contentPane.add(btnNewButton);
+		addBtn.setBounds(492, 391, 91, 29);
+		contentPane.add(addBtn);
 		
-		JButton btnNewButton_1 = new JButton("Delete");
-		btnNewButton_1.setBounds(595, 391, 91, 29);
-		contentPane.add(btnNewButton_1);
+		JButton deleteBtn = new JButton("Delete");
+		addBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		deleteBtn.setBounds(595, 391, 91, 29);
+		contentPane.add(deleteBtn);
 		
 		
 		
@@ -109,9 +119,22 @@ public class viewMembersPage extends JFrame {
 				
 				
 		} catch (Exception e) {
-			
+			e.printStackTrace();
+	        new JOptionPane();
+	        JOptionPane.showMessageDialog(this, "Database Error", "Error Message", JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
 }
 
